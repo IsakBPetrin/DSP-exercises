@@ -20,7 +20,7 @@ A = poly(poles);
 figure(2)
 freqz(B, A, 1024, 'whole')
 title('Frequency Response for N=3')
-%}
+
 
 
 % Order 5
@@ -66,11 +66,63 @@ freqz(B, A, 1024, 'whole')
 title('Frequency Response for N=5 (average)')
 
 
+%Designing filter in the z-domain
+
+
+r  = 0.9
+zeros = [exp(2*pi * 0.1i); exp(-2*pi * 0.1i); conj(exp(0.8i*pi)); conj(exp(-0.8i*pi))];
+poles  = [r * exp(2*pi * 0.1i); r * exp(-2*pi * 0.1i); r * conj(exp(0.8i*pi)); r * conj(exp(-0.8i*pi))];
+
+%figure(1)
+zplane(zeros, poles)
+
+B = poly(zeros);
+A = poly(poles);
+figure(2)
+freqz(B, A, 1024, 'whole')
+%}
+
+r  = 0.5;
+%zeros = [exp(2*pi * 0.05i); exp(2i*pi)];
+%poles  = [r * exp(2*pi * 0.05i); r * exp(2i*pi)];
+
+zeros = [exp(1i*pi)]
+poles = [r * exp(2i*pi)]
+
+B = poly(zeros);
+A = poly(poles);
+h = B/A;
+
+a = 1;
+f = 200;
+phi = 0;
+fs = 10000;
+T = 1;
+[signal_1, t_1] = generate_sinusoid(a,f * 1,phi,fs,T);
+[signal_2, t_2] = generate_sinusoid(a,f * 5,phi,fs,T);
+[signal_3, t_3] = generate_sinusoid(a,f * 10,phi,fs,T);
+signal = signal_1 + signal_2 + signal_3;
+
+[filtered_signal, zf]= filter(h,1, signal);
+
+[Y_filtered, freq_filtered] = make_spectrum(filtered_signal, fs, true);
+[Y, freq] = make_spectrum(signal, fs, true);
+
+figure(1)
+plot(freq_filtered, Y_filtered)
+figure(2)
+plot(freq, Y)
 
 
 
 
+%{
+hold on;
+figure(1)
+plot(t_1, filtered_signal)
+plot(t_1, signal)
+legend({'filtered signal','signal'})
+xlim([0 0.1])
 
-
-
-
+hold off;
+%}
