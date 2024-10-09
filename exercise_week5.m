@@ -128,3 +128,68 @@ xlim([0 0.1])
 
 hold off;
 %}
+
+%Exercise 1.2
+
+
+r_pole = 0.9
+
+zeros = [exp(1i*pi)];
+poles = [r_pole * exp(2i*pi)];
+
+
+
+zeros_poly = poly(zeros);
+poles_poly = poly(poles);
+h = zeros_poly/poles_poly;
+
+
+a = 1;
+f = 20;
+phi = 0;
+fs = 100000;
+T = 1;
+
+signal
+[signal_1, t_1] = generate_sinusoid(a,f * 1,phi,fs,T);
+[signal_2, t_2] = generate_sinusoid(a,f * 5,phi,fs,T);
+[signal_3, t_3] = generate_sinusoid(a,f * 10,phi,fs,T);
+signal = signal_1 + signal_2 + signal_3;
+
+
+
+%{
+hold on;
+plot(t_1,signal_1)
+plot(t_2,signal_2)
+plot(t_3,signal_3)
+xlim([0,0.1])
+hold off;
+%}
+
+
+filtered_signal = filter(zeros_poly,poles_poly,signal)
+
+
+hold on;
+figure(1)
+plot(t_1, filtered_signal)
+plot(t_1, signal)
+xlim([0 0.1])
+hold off;
+
+[Y_filtered, freq_filtered] = make_spectrum(filtered_signal, fs, true);
+[Y, freq] = make_spectrum(signal, fs, true);
+
+hold on;
+figure(2)
+plot(freq, Y)
+xlim([0 500])
+hold off;
+
+hold on;
+figure(3)
+plot(freq, Y_filtered)
+xlim([0 500])
+hold off;
+
