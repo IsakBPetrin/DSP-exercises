@@ -82,6 +82,8 @@ figure(2)
 freqz(B, A, 1024, 'whole')
 %}
 
+
+%{
 r  = 0.5;
 %zeros = [exp(2*pi * 0.05i); exp(2i*pi)];
 %poles  = [r * exp(2*pi * 0.05i); r * exp(2i*pi)];
@@ -112,7 +114,7 @@ figure(1)
 plot(freq_filtered, Y_filtered)
 figure(2)
 plot(freq, Y)
-
+%}
 
 
 
