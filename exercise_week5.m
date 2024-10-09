@@ -131,7 +131,7 @@ hold off;
 
 %Exercise 1.2
 
-
+%{
 r_pole = 0.9
 
 zeros = [exp(1i*pi)];
@@ -155,7 +155,7 @@ signal
 [signal_2, t_2] = generate_sinusoid(a,f * 5,phi,fs,T);
 [signal_3, t_3] = generate_sinusoid(a,f * 10,phi,fs,T);
 signal = signal_1 + signal_2 + signal_3;
-
+%}
 
 
 %{
@@ -167,10 +167,7 @@ xlim([0,0.1])
 hold off;
 %}
 
-
-filtered_signal = filter(zeros_poly,poles_poly,signal)
-
-
+%{
 hold on;
 figure(1)
 plot(t_1, filtered_signal)
@@ -180,7 +177,7 @@ hold off;
 
 [Y_filtered, freq_filtered] = make_spectrum(filtered_signal, fs, true);
 [Y, freq] = make_spectrum(signal, fs, true);
-
+filtered_signal = filter(zeros_poly,poles_poly,signal)
 hold on;
 figure(2)
 plot(freq, Y)
@@ -193,3 +190,25 @@ plot(freq, Y_filtered)
 xlim([0 500])
 hold off;
 
+%}
+
+
+
+
+r_pole = 0.9;
+
+zeros = [exp(2i*pi)];
+poles = [r_pole * exp(i*pi)];
+
+
+
+zeros_poly = poly(zeros);
+poles_poly = poly(poles);
+
+m4aFilename = "Voice.m4a";
+[y, Fs] = audioread(m4aFilename);
+%sound(y, Fs);
+
+filtered_voice = real(filter(zeros_poly, poles_poly, y));
+
+sound(filtered_voice, Fs);
